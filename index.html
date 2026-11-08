@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101619" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23d7e05a'/%3E%3Ctext x='50%25' y='75%25' text-anchor='middle' font-family='Arial' font-weight='900' font-size='48' fill='%23161c16'%3EN%3C/text%3E%3C/svg%3E" />
+  <title>NIGHTFALL — Urban Response</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
+  </script>
+  <script type="module" src="game.js"></script>
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game"></canvas>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+
+    <header class="topbar hud-element">
+      <div class="brand"><span class="brand-mark">N</span><div><b>NIGHTFALL</b><small>URBAN RESPONSE UNIT</small></div></div>
+      <div class="mission-tag"><i></i><span>OPERATION</span><b>LAST LIGHT</b></div>
+      <div class="comms"><span class="comms-dot"></span><span>COMMS SECURE</span><b>●●●</b></div>
+    </header>
+
+    <section class="mission hud-element">
+      <div class="eyebrow"><span class="line"></span> SECTOR 04 <span class="slash">/</span> NIGHT OPS</div>
+      <div class="mission-title">CLEAR THE<br><em>BLOCK.</em></div>
+      <div class="mission-copy">Hostile forces have seized the district.<br>Engage all targets and secure the area.</div>
+      <div class="objective"><div class="objective-icon">⌖</div><div><small>PRIMARY OBJECTIVE</small><b id="objective-text">NEUTRALIZE HOSTILES</b></div><strong id="objective-count">00 / 06</strong></div>
+    </section>
+
+    <div class="center-ui hud-element" id="center-ui">
+      <div class="hit-marker" id="hit-marker"><i></i><i></i><i></i><i></i></div>
+      <div class="crosshair"><span></span><span></span><span></span><span></span><b></b></div>
+      <div class="interact-prompt" id="interact-prompt">CLICK TO DEPLOY</div>
+    </div>
+
+    <section class="bottom-hud hud-element">
+      <div class="player-card"><div class="operator-icon">◈</div><div class="player-data"><small>OPERATOR</small><b>VANGUARD <span>// 07</span></b><div class="health-track"><i id="health-fill"></i></div></div><strong id="health-number">100</strong></div>
+      <div class="bottom-center"><div class="stance"><span>▰</span> STANDING <i></i> <span id="speed-label">READY</span></div><div class="controls-hint">W A S D <span>MOVE</span><b>·</b> MOUSE <span>AIM</span><b>·</b> CLICK <span>FIRE</span></div></div>
+      <div class="weapon-card"><div class="weapon-info"><div class="weapon-name"><small>PRIMARY / 5.56 × 45</small><b>M4A1 <span>CARBINE</span></b></div><div class="ammo"><strong id="ammo-current">30</strong><span>/ <b id="ammo-reserve">120</b></span></div></div><div class="weapon-bottom"><div class="weapon-icon">⌁</div><div class="ammo-bars" id="ammo-bars"></div><small>R <span>RELOAD</span></small></div></div>
+    </section>
+
+    <div class="damage-flash" id="damage-flash"></div>
+    <div class="toast" id="toast"></div>
+    <div class="mobile-controls" id="mobile-controls"><div class="move-pad" id="move-pad"><span>MOVE</span><i></i></div><button id="mobile-fire">FIRE</button><button id="mobile-reload">↻</button></div>
+
+    <div class="screen" id="start-screen">
+      <div class="screen-noise"></div>
+      <div class="briefing">
+        <div class="briefing-top"><div class="brand-mark large">N</div><span>TACTICAL OPERATIONS DIVISION <b>·</b> FIELD BRIEF 04-19</span><div class="briefing-status"><i></i> LIVE MISSION</div></div>
+        <div class="briefing-main">
+          <div class="briefing-copy"><div class="eyebrow"><span class="line"></span> NIGHTFALL PROTOCOL</div><h1>THE CITY<br>IS <em>HOSTILE.</em></h1><p>Move in. Clear the block. Make it out.<br>Your objective is simple. The opposition isn't.</p><button class="deploy-btn" id="deploy"><span>DEPLOY TO SECTOR 04</span><b>↗</b></button><div class="briefing-note"><span>▶</span> PRESS TO DEPLOY <i>—</i> MOUSE TO LOOK</div></div>
+          <div class="briefing-side"><div class="map-frame"><div class="map-grid"></div><div class="map-street"></div><div class="map-building b1"></div><div class="map-building b2"></div><div class="map-building b3"></div><div class="map-building b4"></div><div class="map-player">▲</div><div class="map-enemy e1">×</div><div class="map-enemy e2">×</div><div class="map-enemy e3">×</div><span class="map-coord">40°42'51.2"N<br>74°00'18.6"W</span><span class="map-label">SECTOR 04 — FINANCIAL DISTRICT</span><span class="map-north">N ↑</span></div><div class="briefing-stats"><div><small>THREAT LEVEL</small><b><i>● ● ●</i> ELEVATED</b></div><div><small>HOSTILE COUNT</small><b>06 <span>CONFIRMED</span></b></div><div><small>INSERTION</small><b>GROUND <span>— ALPHA</span></b></div></div></div>
+        </div>
+        <div class="briefing-footer"><span>AUTHORIZED PERSONNEL ONLY</span><span>ENCRYPTED CHANNEL <b>08.14.77</b></span><span>© 2025 NIGHTFALL GROUP</span></div>
+      </div>
+    </div>
+
+    <div class="screen hidden" id="pause-screen"><div class="pause-card"><div class="eyebrow"><span class="line"></span> OPERATION PAUSED</div><h2>TAKE A<br><em>BREATH.</em></h2><p>The sector is holding. Resume when ready.</p><button class="deploy-btn" id="resume">RESUME OPERATION <b>↗</b></button><div class="pause-tip">ESC <span>RESUME</span> &nbsp;·&nbsp; R <span>RELOAD</span></div></div></div>
+    <div class="screen hidden" id="end-screen"><div class="pause-card"><div class="eyebrow"><span class="line"></span> <span id="end-kicker">MISSION COMPLETE</span></div><h2 id="end-title">BLOCK<br><em>SECURED.</em></h2><p id="end-copy">All hostiles neutralized. Good work, operator.</p><div class="end-stats"><div><small>HOSTILES</small><b id="end-kills">06</b></div><div><small>ACCURACY</small><b id="end-accuracy">—</b></div><div><small>STATUS</small><b id="end-status">SUCCESS</b></div></div><button class="deploy-btn" id="restart">RUN IT BACK <b>↗</b></button></div></div>
+  </main>
+</body>
+</html>
